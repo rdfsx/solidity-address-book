@@ -7,21 +7,28 @@ contract SimpleAddressBook {
     mapping(address => address[]) private _addresses;
     mapping(address => mapping(address => string)) private _aliases;
 
+    event AddressBookCreated(address owner);
+    event AliasAdded(address owner, address target, string _alias);
+
     modifier hasAddressBook {
         require(_addresses[msg.sender].length != 0);
         _;
     }
 
-    function createAddressBook() public {
+    function createAddressBook() public payable {
+        require(_addresses[msg.sender].length == 0, "You already have an address book!");
+        require(msg.value >= 0.1 ether, "You must pay at least 0.1 eth to create an address book!");
         _addresses[msg.sender].push();
+        emit AddressBookCreated(msg.sender);
     }
 
     function addAlias(address addr, string memory name) public hasAddressBook {
         _addresses[msg.sender].push(addr);
         _aliases[msg.sender][addr] = name;
+        emit AliasAdded(msg.sender, addr, name);
     }
 
-    function getAlias(address addr) public {
-
+    function getAlias(address addr) public view hasAddressBook returns (string memory) {
+        return _aliases[msg.sender][addr];
     }
 }
