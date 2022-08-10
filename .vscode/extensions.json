@@ -5,6 +5,7 @@
     "hnw.vscode-auto-open-markdown-preview",
     "naumovs.color-highlight",
     "oderwat.indent-rainbow",
-    "juanblanco.solidity"
+    "juanblanco.solidity",
+    "RemixProject.ethereum-remix"
   ]
 }
