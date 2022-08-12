@@ -35,5 +35,12 @@ describe('SimpleAddressBook contract tests', () => {
       const tx = await this.contract.getAlias(address)
       expect(tx).to.equal(alias)
     })
+
+    it('should delete alias', async function () {
+      const tx = await this.contract.removeAddress(address)
+      const receipt: ContractReceipt = await tx.wait()
+      expect(receipt.events?.map((x) => x.event)).to.include('AliasRemoved')
+      expect(await this.contract.getAlias(address)).to.equal('')
+    })
   })
 })

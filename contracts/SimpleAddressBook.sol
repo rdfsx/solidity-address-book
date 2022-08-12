@@ -8,6 +8,7 @@ contract SimpleAddressBook {
 
   event AddressBookCreated(address owner);
   event AliasAdded(address owner, address target, string _alias);
+  event AliasRemoved(address owner, string _alias);
 
   modifier hasAddressBook() {
     require(_addresses[msg.sender].length != 0);
@@ -46,5 +47,24 @@ contract SimpleAddressBook {
 
   function getAddressArray() public view returns (address[] memory) {
     return _addresses[msg.sender];
+  }
+
+  function removeAddress(address addr) public {
+    for (uint256 i = 0; i < _addresses[msg.sender].length; i++) {
+      if (_addresses[msg.sender][i] == addr) {
+        _addresses[msg.sender][i] = _addresses[msg.sender][
+          _addresses[msg.sender].length - 1
+        ];
+        _addresses[msg.sender].pop();
+        break;
+      }
+    }
+
+    string memory _alias = _aliases[msg.sender][addr];
+    delete _isTakenAlias[msg.sender][_alias];
+
+    delete _aliases[msg.sender][addr];
+
+    emit AliasRemoved(msg.sender, _alias);
   }
 }
